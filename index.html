@@ -1,14 +1,163 @@
 <!DOCTYPE html>
 <html>
-    <title>GifTastic</title>
-    <meta charset="UTF-8">
-    <head>
+    <meta charset="UFT-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <body class="container">
+        <style>
+            .show{
+                background-color: aqua;
+                margin:10px;
+                
 
-    </head>
+            }
+            .gifs{
+                float:left;
+                width: 33.33%;
+                padding: 5px;
+                justify-content: center;
+                
+                border: red;
+                border:solid rgb(112, 223, 243);                
+            }
+            .gif{
+                width: 90%;
+                height:auto;
+                
+            }
+            
+
+        </style>
+        <div class="showButtons container container-fluid" ></div>
+     <div class="row">
+         
+            <div class="showGif col-md-9"></div>
+            <div class="col-md-3">
+                    <form>
+                        <label >Add an animal</label>
+                        <input type="text" data="text" class="animal-input">
+                        <input type="submit" value="Add an animal" class="add-animal">
+                    </form>
+                 </div>
+     </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script type="text/javascript">
+
+        function displayGif()
+         {
+            var animalName= $(this).attr("data-name");
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+              animalName + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"})
+            .then(function(response)
+            {
+                 console.log(queryURL);
+
+             var results = response.data;
+             //meta info
+             for (var i=0; i<results.length;i++
+                  )
+             {
+
+                 var animalDiv=$("<div>").addClass("gifs");
+                 var p = $("<p>").text("Rating: "+ results[i].rating);
+                 var pTwo = $("<p>").text("Title: "+results[i].title);
+                    console.log(results[i]);
+                 var pThree = $("<p>").text("Meta Message: "+response.meta.msg);
+                    console.log(response);
+                    //console.log(pThree);
+                 var animalImage = $("<img>") ;
+                 animalImage.attr({"src":results[i].images.fixed_height_still.url, "class":"gif","animated":results[i].images.fixed_height.url, "still":results[i].images.fixed_height_still.url,
+                  "state":"still" });
+
+                 animalDiv.append(p);
+                 console.log(p)
+                 animalDiv.append(pTwo);
+                 animalDiv.append(pThree);
+                 animalDiv.append(animalImage);
+                $(".showGif").prepend(animalDiv);
+
+             };
+             
+             
+
+            });
+        };
         
-    <body>
+        
 
-        <script type= "text/javascript" src="assets/javascript/app.js"></script>
+            var topics = ["cat","dog","panda"];
+                function renderButtons()
+                {
+                   $(".showButtons").empty();
 
+                    for (var i=0; i<topics.length; i++)
+                    {
+                        var a=$("<button>");
+
+                        a.addClass("show");
+
+                        a.attr({"data-name":topics[i], "type":"button"});
+
+                        a.text(topics[i]);
+
+                        $(".showButtons").append(a);
+                    };
+                    
+                };
+                 
+                
+          
+        $(".add-animal").on("click", function(event)
+            {
+                event.preventDefault();
+                        
+                var gifName = $(".animal-input").val().trim();
+
+        
+                 topics.push(gifName);
+
+        
+                renderButtons();
+            });
+
+                 
+
+                
+
+
+
+        $(document).on("click", ".show", displayGif);
+        renderButtons(); 
+
+       
+
+        function changeState(){
+            var state = $(this).attr("state")
+            console.log(state)
+            if (state==="still")
+            {
+                $(this).attr({"src":$(this).attr("animated"), "class":"gif","state":"animate"})
+            }
+            else
+            {
+                $(this).attr({"src":$(this).attr("still"), "class":"gif","state":"still"
+                })
+            }
+
+        };
+        $(document).on("click",".gif",changeState);
+
+        //1-click download
+        //intergrate this search with additional api omdb bands in town 
+        // add to portfolio
+        //favorites section
+        //persist  when reloaded
+      </script>
+       
     </body>
 </html>
